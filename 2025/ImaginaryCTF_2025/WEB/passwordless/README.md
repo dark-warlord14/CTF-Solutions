@@ -3,7 +3,7 @@
 
 ## Description
 
-![Challenge Overview](image.png)
+![Challenge Overview](assets/image.png)
 
 We have the code this time.
 
@@ -11,7 +11,7 @@ We have the code this time.
 
 ## Code Review
 
-![Project Files](image-1.png)
+![Project Files](assets/image-1.png)
 
 It’s typical containerized CTF code with:
 
@@ -26,7 +26,7 @@ Let’s look deeper to see how everything works.
 
 ### Dockerfile
 
-![Dockerfile](image-2.png)
+![Dockerfile](assets/image-2.png)
 
 This tells us a few things:
 - It’s a Node.js app
@@ -39,7 +39,7 @@ Let’s see what the Node.js app is doing. As always, let’s map the sources fi
 
 ### Routes
 
-![Route Mapping](image-3.png)
+![Route Mapping](assets/image-3.png)
 
 So we got 7 routes. Some of them look very uninteresting, let’s rule them out one by one.
 
@@ -47,11 +47,11 @@ So we got 7 routes. Some of them look very uninteresting, let’s rule them out 
 
 #### GET `/dashboard`
 
-![Dashboard Route](image-4.png)
+![Dashboard Route](assets/image-4.png)
 
 Loads the dashboard template after `restrict` is passed. Taking a look at the `dashboard.ejs` code, we now know this is where the flag lives.
 
-![dashboard.ejs](image-5.png)
+![dashboard.ejs](assets/image-5.png)
 
 `restrict` validates the user session.  
 So we need to get a valid session first, then visit `/dashboard` and we’ll get the flag.
@@ -66,7 +66,7 @@ So we need to get a valid session first, then visit `/dashboard` and we’ll get
 
 #### GET `/login`
 
-![Login Route](image-6.png)
+![Login Route](assets/image-6.png)
 
 If authenticated, it just redirects to dashboard. Moving on.
 
@@ -76,7 +76,7 @@ If authenticated, it just redirects to dashboard. Moving on.
 
 Renders `register.ejs`, which just makes a POST request to `/user` with the email.
 
-![Register Page](image-7.png)
+![Register Page](assets/image-7.png)
 
 ---
 
@@ -84,7 +84,7 @@ Renders `register.ejs`, which just makes a POST request to `/user` with the emai
 
 This is the signup/registration logic. Let’s dig into this.
 
-![User Registration](image-8.png)
+![User Registration](assets/image-8.png)
 
 Flow looks like this:
 
@@ -144,12 +144,12 @@ From the looks of it, it feels like we need to guess the initial password. Let�
 
 #### POST `/session`
 
-![Session Logic](image-9.png)
+![Session Logic](assets/image-9.png)
 
 - This has the authentication logic.
 - Takes email + password as input and passes to the authenticate function.
 
-![Authenticate Function](image-10.png)
+![Authenticate Function](assets/image-10.png)
 
 It queries the DB and uses parameterized statements. So **no SQLi of course**.  
 FYI SQLi has been dead for a while in CTFs — haven’t seen it in quite some time.
@@ -172,7 +172,7 @@ A few important notes:
 
 Looking at the bcrypt documentation: https://www.npmjs.com/package/bcrypt
 
-![bcrypt Docs](image-11.png)
+![bcrypt Docs](assets/image-11.png)
 
 ```
 Per bcrypt implementation, only the first 72 bytes of a string are used. Any extra bytes are ignored when matching passwords. Note that this is not the first 72 characters. It is possible for a string to contain less than 72 characters, while taking up more than 72 bytes (e.g. a UTF-8 encoded string containing emojis). If a string is provided, it will be encoded using UTF-8.
@@ -189,7 +189,7 @@ There’s also this `normalize-email` library in the middle — not sure if it m
 
 ### Test with Emoji
 
-![Emoji Email Test](image-12.png)
+![Emoji Email Test](assets/image-12.png)
 
 ```js
 const normalizeEmail = require('normalize-email')
@@ -219,7 +219,7 @@ We just need to create the password same as the original, hash it, and then supp
 
 ### Test: Bcrypt Compare
 
-![Bcrypt Compare Test](image-13.png)
+![Bcrypt Compare Test](assets/image-13.png)
 
 ```js
 const normalizeEmail = require('normalize-email')
@@ -268,7 +268,7 @@ We’ll use Node.js. It’s 3 steps actually:
 
 ### Exploit
 
-![Exploit Run](image-14.png)
+![Exploit Run](assets/image-14.png)
 
 And we have it. 🎉  
 
