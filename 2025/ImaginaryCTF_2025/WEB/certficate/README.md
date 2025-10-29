@@ -5,22 +5,22 @@
 
 No code is provided.
 
-![Challenge Overview](image.png)
+![Challenge Overview](assets/image.png)
 
 ---
 
 ## First Look
 
-![Certificate Preview](image-1.png)
+![Certificate Preview](assets/image-1.png)
 
 Tried generating a test certificate and then previewing, downloading, and printing it.  
 Observed that no API calls were made — this hints we need to dig deeper into the frontend code.
 
-![Frontend Source](image-2.png)
+![Frontend Source](assets/image-2.png)
 
 There is only **one main page** that has some logic, and nothing else.
 
-![Main Page](image-3.png)
+![Main Page](assets/image-3.png)
 
 Looking at the JavaScript, there is a `makeFlag` function that seems to generate a flag and then embed it inside the SVG. Weird.
 
@@ -78,11 +78,11 @@ function renderPreview(){
 
 ## Key Observation
 
-![JavaScript Check](image-4.png)
+![JavaScript Check](assets/image-4.png)
 
 The certificate name is **redacted for `Eth007`**, as enforced by the frontend JS.
 
-![Redacted Certificate](image-5.png)
+![Redacted Certificate](assets/image-5.png)
 
 But since the `makeFlag` function generates the flag, we can simply call it manually in the dev tools console with `Eth007`.
 
@@ -90,7 +90,7 @@ But since the `makeFlag` function generates the flag, we can simply call it manu
 
 ## Exploit
 
-![DevTools Exploit](image-6.png)
+![DevTools Exploit](assets/image-6.png)
 
 Calling `makeFlag("Eth007")` directly gives us the flag. ✅  
 
